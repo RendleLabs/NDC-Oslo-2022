@@ -1,4 +1,5 @@
 using Ingredients.Protos;
+using Orders.PubSub;
 using Orders.Services;
 
 var macOS = OperatingSystem.IsMacOS();
@@ -19,6 +20,8 @@ builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
 
 // Add services to the container.
 builder.Services.AddGrpc();
+
+builder.Services.AddOrderPubSub();
 
 var app = builder.Build();
 
