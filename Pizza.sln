@@ -19,6 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ingredients", "src\Ingredie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ingredients.Tests", "test\Ingredients.Tests\Ingredients.Tests.csproj", "{CAC77C49-54D2-45FC-BA3A-13C66CBE2903}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{8DEE8383-A96D-4607-9674-26F7BCCCE851}"
+	ProjectSection(SolutionItems) = preProject
+		tye.yaml = tye.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders", "src\Orders\Orders.csproj", "{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +59,10 @@ Global
 		{CAC77C49-54D2-45FC-BA3A-13C66CBE2903}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAC77C49-54D2-45FC-BA3A-13C66CBE2903}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAC77C49-54D2-45FC-BA3A-13C66CBE2903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{84761F60-37B8-4949-947B-6204CE1EC62F} = {A02B311C-28E1-469F-8646-C76B459E074B}
@@ -60,5 +71,6 @@ Global
 		{CF0A8113-7381-44BD-A592-904D839F11C9} = {21D49B5C-2B6C-4E62-B3EC-0E79909BF3F6}
 		{29459A35-B1A3-4636-8172-2AE00198C3B1} = {A02B311C-28E1-469F-8646-C76B459E074B}
 		{CAC77C49-54D2-45FC-BA3A-13C66CBE2903} = {21D49B5C-2B6C-4E62-B3EC-0E79909BF3F6}
+		{D2A76B99-9FD7-4C8A-A851-A97C1D35DF5D} = {A02B311C-28E1-469F-8646-C76B459E074B}
 	EndGlobalSection
 EndGlobal

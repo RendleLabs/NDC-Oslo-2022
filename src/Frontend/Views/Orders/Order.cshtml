@@ -3,5 +3,6 @@
 }
 
 <div class="text-center">
-  <h1 class="display-4">Your order has been placed</h1>
+  <h1 class="display-4">Your order has been placed and will be with you by
+    @(((DateTimeOffset)ViewData["DueBy"]!).ToString("t"))</h1>
 </div>
