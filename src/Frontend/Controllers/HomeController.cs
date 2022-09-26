@@ -37,7 +37,7 @@ public class HomeController : Controller
         var response = await _ingredients.GetToppingsAsync(new GetToppingsRequest());
 
         return response.Toppings
-            .Select(t => new ToppingViewModel(t.Id, t.Name, Convert.ToDecimal(t.Price)))
+            .Select(t => new ToppingViewModel(t.Id, t.Name, t.Price))
             .ToList();
     }
 

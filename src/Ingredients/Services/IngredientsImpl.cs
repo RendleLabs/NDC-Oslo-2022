@@ -26,11 +26,12 @@ public class IngredientsImpl : IngredientsService.IngredientsServiceBase
                     {
                         Id = t.Id,
                         Name = t.Name,
-                        Price = t.Price
+                        Price = t.Price,
+                        DoublePrice = t.Price,
                     })
             }
         };
-
+        
         return response;
     }
 }
