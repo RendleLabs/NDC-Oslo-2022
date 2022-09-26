@@ -24,6 +24,7 @@ if (macOS)
 builder.Services.AddGrpc();
 
 builder.Services.AddSingleton<IToppingData, ToppingData>();
+builder.Services.AddSingleton<ICrustData, CrustData>();
 builder.Services.AddSingleton<IngredientsImpl>();
 
 var app = builder.Build();

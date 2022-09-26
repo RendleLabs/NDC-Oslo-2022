@@ -9,12 +9,7 @@ package ingredients;
 service IngredientsService
 {
   rpc GetToppings(GetToppingsRequest) returns (GetToppingsResponse);
-}
-
-message GetToppingsRequest {}
-
-message GetToppingsResponse {
-  repeated Topping toppings = 1;
+  rpc GetCrusts(GetCrustsRequest) returns (GetCrustsResponse);
 }
 
 message Topping {
@@ -23,3 +18,22 @@ message Topping {
   double double_price = 3; // Deprecated
   customTypes.DecimalValue price = 4;
 }
+
+message Crust {
+  string id = 1;
+  string name = 2;
+  int32 size = 3;
+  customTypes.DecimalValue price = 4;
+}
+message GetToppingsRequest {}
+
+message GetToppingsResponse {
+  repeated Topping toppings = 1;
+}
+
+message GetCrustsRequest {}
+
+message GetCrustsResponse {
+  repeated Crust crusts = 1;
+}
+
