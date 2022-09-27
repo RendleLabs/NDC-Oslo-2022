@@ -1,14 +1,34 @@
 using Ingredients.Protos;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Orders.PubSub;
 using Orders.Services;
 
+var runningInContainer = "true".Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"));
 var macOS = OperatingSystem.IsMacOS();
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (runningInContainer)
+{
+    builder.WebHost.ConfigureKestrel(k =>
+    {
+        k.ConfigureEndpointDefaults(o => o.Protocols = HttpProtocols.Http2);
+    });
+}
+else if (macOS)
+{
+    builder.WebHost.ConfigureKestrel(k =>
+    {
+        k.ListenLocalhost(5002, l =>
+        {
+            l.Protocols = HttpProtocols.Http2;
+        });
+    });
+}
+
 // macOS doesn't like HTTPS
 var defaultIngredientsUri = macOS ? "http://localhost:5002" : "https://localhost:5003";
-var binding = macOS ? "http" : "https";
+var binding = macOS || runningInContainer ? "http" : "https";
 
 var ingredientsUri = builder.Configuration.GetServiceUri("ingredients", binding)
                      ?? new Uri(defaultIngredientsUri);
