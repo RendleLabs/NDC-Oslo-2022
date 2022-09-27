@@ -1,9 +1,11 @@
 ﻿using Grpc.Core;
 using Ingredients.Data;
 using Ingredients.Protos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ingredients.Services;
 
+[Authorize]
 public class IngredientsImpl : IngredientsService.IngredientsServiceBase
 {
     private readonly IToppingData _toppingData;

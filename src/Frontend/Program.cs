@@ -17,7 +17,16 @@ var defaultIngredientsUri = macOS ? "http://localhost:5002" : "https://localhost
 var ingredientsUri = builder.Configuration.GetServiceUri("ingredients", binding)
                      ?? new Uri(defaultIngredientsUri);
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; });
+builder.Services.AddHttpClient("ingredients")
+    .ConfigurePrimaryHttpMessageHandler(DevelopmentModeCertificateHelper.CreateClientHandler);
+
+builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; })
+    .ConfigureChannel((provider, options) =>
+    {
+        options.HttpHandler = null;
+        options.HttpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient("ingredients");
+        options.DisposeHttpClient = true;
+    });
 
 var defaultOrdersUri = macOS ? "http://localhost:5004" : "https://localhost:5005";
 var ordersUri = builder.Configuration.GetServiceUri("orders", binding)

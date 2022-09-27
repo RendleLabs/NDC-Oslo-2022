@@ -17,10 +17,16 @@ var binding = macOS ? "http" : "https";
 var ingredientsUri = builder.Configuration.GetServiceUri("ingredients", binding)
                      ?? new Uri(defaultIngredientsUri);
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
-{
-    o.Address = ingredientsUri;
-});
+builder.Services.AddHttpClient("ingredients")
+    .ConfigurePrimaryHttpMessageHandler(DevelopmentModeCertificateHelper.CreateClientHandler);
+
+builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; })
+    .ConfigureChannel((provider, options) =>
+    {
+        options.HttpHandler = null;
+        options.HttpClient = provider.GetRequiredService<IHttpClientFactory>().CreateClient("ingredients");
+        options.DisposeHttpClient = true;
+    });
 
 // Add services to the container.
 builder.Services.AddGrpc();
