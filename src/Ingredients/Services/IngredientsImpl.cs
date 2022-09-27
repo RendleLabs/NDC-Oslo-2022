@@ -29,7 +29,6 @@ public class IngredientsImpl : IngredientsService.IngredientsServiceBase
                         Id = t.Id,
                         Name = t.Name,
                         Price = t.Price,
-                        DoublePrice = t.Price,
                     })
             }
         };

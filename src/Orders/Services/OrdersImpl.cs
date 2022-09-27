@@ -23,6 +23,16 @@ public class OrdersImpl : OrderService.OrderServiceBase
 
     public override async Task<PlaceOrderResponse> PlaceOrder(PlaceOrderRequest request, ServerCallContext context)
     {
+        if (request.CrustId.Length == 0)
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "crust_id is required"));
+        }
+
+        if (request.ToppingIds.Count < 2)
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "At least two topping_id values are required"));
+        }
+        
         var decrementToppingsRequest = new DecrementToppingsRequest
         {
             ToppingIds = { request.ToppingIds }
@@ -39,7 +49,7 @@ public class OrdersImpl : OrderService.OrderServiceBase
         
         var dueBy = DateTimeOffset.UtcNow.AddMinutes(45);
         
-        await _orderPublisher.PublishOrder(request.CrustId, request.ToppingIds, dueBy);
+        await _orderPublisher.PublishOrder(request.CrustId, request.ToppingIds, dueBy, Guid.NewGuid().ToString());
 
         return new PlaceOrderResponse
         {
@@ -63,6 +73,7 @@ public class OrdersImpl : OrderService.OrderServiceBase
                     CrustId = message.CrustId,
                     ToppingIds = { message.ToppingIds },
                     DueBy = message.Time.ToTimestamp(),
+                    NotificationId = message.OrderId,
                 };
                 try
                 {
@@ -70,7 +81,7 @@ public class OrdersImpl : OrderService.OrderServiceBase
                 }
                 catch
                 {
-                    await _orderPublisher.PublishOrder(message.CrustId, message.ToppingIds, message.Time);
+                    await _orderPublisher.PublishOrder(message.CrustId, message.ToppingIds, message.Time, message.OrderId);
                 }
             }
             catch (OperationCanceledException)

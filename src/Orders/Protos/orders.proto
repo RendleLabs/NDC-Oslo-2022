@@ -28,4 +28,5 @@ message OrderNotification {
   string crust_id = 1;
   repeated string topping_ids = 2;
   google.protobuf.Timestamp due_by = 3;
+  string notification_id = 4;
 }

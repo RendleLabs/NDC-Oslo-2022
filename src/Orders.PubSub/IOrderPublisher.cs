@@ -6,5 +6,5 @@ namespace Orders.PubSub;
 
 public interface IOrderPublisher : IDisposable
 {
-    Task PublishOrder(string crustId, IEnumerable<string> toppingIds, DateTimeOffset time);
+    Task PublishOrder(string crustId, IEnumerable<string> toppingIds, DateTimeOffset time, string orderId);
 }

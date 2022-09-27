@@ -21,13 +21,14 @@ public class OrderPublisher : IOrderPublisher
         _sub = _redis.GetSubscriber();
     }
 
-    public async Task PublishOrder(string crustId, IEnumerable<string> toppingIds, DateTimeOffset time)
+    public async Task PublishOrder(string crustId, IEnumerable<string> toppingIds, DateTimeOffset time, string orderId)
     {
         var message = new OrderMessage
         {
             CrustId = crustId,
             ToppingIds = toppingIds.ToArray(),
-            Time = time
+            Time = time,
+            OrderId = orderId,
         }.ToBytes();
         await _sub.PublishAsync("orders", message);
     }

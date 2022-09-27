@@ -6,6 +6,7 @@ namespace Shop;
 public class Worker : BackgroundService
 {
     private readonly OrderService.OrderServiceClient _orderServiceClient;
+    private readonly HashSet<string> _seen = new();
     private readonly ILogger<Worker> _logger;
 
     public Worker(OrderService.OrderServiceClient orderServiceClient, ILogger<Worker> logger)
@@ -24,10 +25,13 @@ public class Worker : BackgroundService
 
                 await foreach (var notification in stream.ResponseStream.ReadAllAsync(stoppingToken))
                 {
-                    _logger.LogInformation("Order: {CrustId} with {ToppingIds} due by {DueBy}",
-                        notification.CrustId,
-                        string.Join(", ", notification.ToppingIds),
-                        notification.DueBy.ToDateTimeOffset().ToLocalTime().ToString("t"));
+                    if (_seen.Add(notification.NotificationId))
+                    {
+                        _logger.LogInformation("Order: {CrustId} with {ToppingIds} due by {DueBy}",
+                            notification.CrustId,
+                            string.Join(", ", notification.ToppingIds),
+                            notification.DueBy.ToDateTimeOffset().ToLocalTime().ToString("t"));
+                    }
                 }
             }
             catch (OperationCanceledException)

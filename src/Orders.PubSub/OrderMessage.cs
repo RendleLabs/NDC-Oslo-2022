@@ -10,6 +10,8 @@ public class OrderMessage
     [Key(1)] public string[] ToppingIds { get; set; } = null!;
     [Key(2)] public DateTimeOffset Time { get; set; }
 
+    [Key(3)] public string OrderId { get; set; } = null!;
+
     public byte[] ToBytes() =>
         MessagePackSerializer.Serialize(this);
 

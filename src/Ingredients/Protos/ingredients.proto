@@ -15,9 +15,9 @@ service IngredientsService
 }
 
 message Topping {
+  reserved 3; // Was double price
   string id = 1;
   string name = 2;
-  double double_price = 3; // Deprecated
   customTypes.DecimalValue price = 4;
 }
 
