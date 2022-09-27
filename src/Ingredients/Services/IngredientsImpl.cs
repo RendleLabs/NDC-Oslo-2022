@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using System.Diagnostics;
+using Grpc.Core;
 using Ingredients.Data;
 using Ingredients.Protos;
 
@@ -8,15 +9,18 @@ public class IngredientsImpl : IngredientsService.IngredientsServiceBase
 {
     private readonly IToppingData _toppingData;
     private readonly ICrustData _crustData;
+    private readonly ILogger<IngredientsImpl> _logger;
 
-    public IngredientsImpl(IToppingData toppingData, ICrustData crustData)
+    public IngredientsImpl(IToppingData toppingData, ICrustData crustData, ILogger<IngredientsImpl> logger)
     {
         _toppingData = toppingData;
         _crustData = crustData;
+        _logger = logger;
     }
 
     public override async Task<GetToppingsResponse> GetToppings(GetToppingsRequest request, ServerCallContext context)
     {
+        var start = Stopwatch.GetTimestamp();
         var toppings = await _toppingData.GetAsync(context.CancellationToken);
 
         var response = new GetToppingsResponse
@@ -32,6 +36,11 @@ public class IngredientsImpl : IngredientsService.IngredientsServiceBase
                     })
             }
         };
+
+        var stop = Stopwatch.GetTimestamp();
+        var elapsed = TimeSpan.FromTicks(stop - start);
+        
+        _logger.LogInformation("GetToppings completed in {Elapsed}", elapsed.ToString("g"));
         
         return response;
     }

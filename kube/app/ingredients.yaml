@@ -4,6 +4,7 @@ metadata:
   name: ingredients
   namespace: pizza
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: ingredients
@@ -11,6 +12,8 @@ spec:
     metadata:
       labels:
         app: ingredients
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
       - name: ingredients

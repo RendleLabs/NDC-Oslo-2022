@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: orders
+      annotations:
+        linkerd.io/inject: enabled
     spec:
       containers:
       - name: orders
