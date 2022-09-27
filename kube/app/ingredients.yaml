@@ -28,6 +28,12 @@ spec:
         env:
         - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
           value: 'true'
+        - name: Jaeger__ServiceName
+          value: 'ingredients'
+        - name: Jaeger__Host
+          value: 'jaeger-agent'
+        - name: Jaeger__Port
+          value: '6831'
 
 ---
 

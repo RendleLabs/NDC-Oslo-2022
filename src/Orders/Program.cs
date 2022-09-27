@@ -1,4 +1,5 @@
 using Ingredients.Protos;
+using JaegerTracing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Orders.PubSub;
 using Orders.Services;
@@ -7,6 +8,8 @@ var runningInContainer = "true".Equals(Environment.GetEnvironmentVariable("DOTNE
 var macOS = OperatingSystem.IsMacOS();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddJaegerTracing();
 
 if (runningInContainer)
 {

@@ -32,21 +32,12 @@ public class OrdersImpl : OrderService.OrderServiceBase
         {
             throw new RpcException(new Status(StatusCode.InvalidArgument, "At least two topping_id values are required"));
         }
-        
-        var decrementToppingsRequest = new DecrementToppingsRequest
-        {
-            ToppingIds = { request.ToppingIds }
-        };
-        await _ingredients.DecrementToppingsAsync(decrementToppingsRequest,
-            cancellationToken: context.CancellationToken);
 
-        var decrementCrustsRequest = new DecrementCrustsRequest
-        {
-            CrustIds = { request.CrustId }
-        };
-        await _ingredients.DecrementCrustsAsync(decrementCrustsRequest,
-            cancellationToken: context.CancellationToken);
-        
+        await Task.WhenAll(
+            DecrementToppings(request, context),
+            DecrementCrusts(request, context)
+            );
+
         var dueBy = DateTimeOffset.UtcNow.AddMinutes(45);
         
         await _orderPublisher.PublishOrder(request.CrustId, request.ToppingIds, dueBy, Guid.NewGuid().ToString());
@@ -55,6 +46,26 @@ public class OrdersImpl : OrderService.OrderServiceBase
         {
             DueBy = dueBy.ToTimestamp(),
         };
+    }
+
+    private async Task DecrementCrusts(PlaceOrderRequest request, ServerCallContext context)
+    {
+        var decrementCrustsRequest = new DecrementCrustsRequest
+        {
+            CrustIds = { request.CrustId }
+        };
+        await _ingredients.DecrementCrustsAsync(decrementCrustsRequest,
+            cancellationToken: context.CancellationToken);
+    }
+
+    private async Task DecrementToppings(PlaceOrderRequest request, ServerCallContext context)
+    {
+        var decrementToppingsRequest = new DecrementToppingsRequest
+        {
+            ToppingIds = { request.ToppingIds }
+        };
+        await _ingredients.DecrementToppingsAsync(decrementToppingsRequest,
+            cancellationToken: context.CancellationToken);
     }
 
     public override async Task Subscribe(SubscribeRequest request,

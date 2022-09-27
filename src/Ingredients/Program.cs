@@ -1,11 +1,14 @@
 using Ingredients.Data;
 using Ingredients.Services;
+using JaegerTracing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var runningInContainer = "true".Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"));
 var macOS = OperatingSystem.IsMacOS();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddJaegerTracing();
 
 if (runningInContainer)
 {
