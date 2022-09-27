@@ -30,9 +30,18 @@ public class OrdersController : Controller
             },
             CrustId = viewModel.SelectedCrust,
         };
+        var metadata = new Metadata();
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var authHeader = Request.Headers.Authorization[0];
+            if (authHeader.StartsWith("Bearer "))
+            {
+                metadata.Add("Authorization", authHeader);
+            }
+        }
         try
         {
-            var response = await _orders.PlaceOrderAsync(placeOrderRequest);
+            var response = await _orders.PlaceOrderAsync(placeOrderRequest, metadata);
             ViewData["DueBy"] = response.DueBy.ToDateTimeOffset();
             return View();
         }

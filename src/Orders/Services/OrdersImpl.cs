@@ -1,11 +1,13 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Ingredients.Protos;
+using Microsoft.AspNetCore.Authorization;
 using Orders.Protos;
 using Orders.PubSub;
 
 namespace Orders.Services;
 
+[Authorize]
 public class OrdersImpl : OrderService.OrderServiceBase
 {
     private readonly IngredientsService.IngredientsServiceClient _ingredients;
@@ -57,6 +59,7 @@ public class OrdersImpl : OrderService.OrderServiceBase
         };
     }
 
+    [AllowAnonymous]
     public override async Task Subscribe(SubscribeRequest request,
         IServerStreamWriter<OrderNotification> responseStream,
         ServerCallContext context)

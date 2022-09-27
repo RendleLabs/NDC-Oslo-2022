@@ -1,3 +1,5 @@
+using AuthHelp;
+using Grpc.Core;
 using Ingredients.Protos;
 using Orders.Protos;
 
@@ -15,19 +17,22 @@ var defaultIngredientsUri = macOS ? "http://localhost:5002" : "https://localhost
 var ingredientsUri = builder.Configuration.GetServiceUri("ingredients", binding)
                      ?? new Uri(defaultIngredientsUri);
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
-{
-    o.Address = ingredientsUri;
-});
+builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; });
 
 var defaultOrdersUri = macOS ? "http://localhost:5004" : "https://localhost:5005";
 var ordersUri = builder.Configuration.GetServiceUri("orders", binding)
-                     ?? new Uri(defaultOrdersUri);
+                ?? new Uri(defaultOrdersUri);
 
-builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o =>
-{
-    o.Address = ordersUri;
-});
+builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o => { o.Address = ordersUri; })
+    .ConfigureChannel((channel) =>
+    {
+        var callCredentials = CallCredentials.FromInterceptor(async (_, metadata) =>
+        {
+            var token = JwtHelper.GenerateJwtToken("frontend");
+            metadata.Add("Authorization", $"Bearer {token}");
+        });
+        channel.Credentials = ChannelCredentials.Create(ChannelCredentials.SecureSsl, callCredentials);
+    });
 
 var app = builder.Build();
 
