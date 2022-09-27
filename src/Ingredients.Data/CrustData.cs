@@ -9,10 +9,12 @@ public class CrustData : ICrustData
     public const string TableName = "crusts";
     private readonly ILogger<CrustData> _log;
     private readonly TableClient _client;
+    private readonly TableServiceClient _serviceClient;
 
     public CrustData(ILogger<CrustData> log)
     {
         _log = log;
+        _serviceClient = new TableServiceClient(Constants.StorageConnectionString);
         _client = new TableClient(Constants.StorageConnectionString, TableName);
     }
 
@@ -64,6 +66,19 @@ public class CrustData : ICrustData
             {
                 _log.LogError(ex, "Error updating data.");
             }
+        }
+    }
+
+    public async Task<bool> IsHealthyAsync()
+    {
+        try
+        {
+            await _serviceClient.GetPropertiesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
         }
     }
 }

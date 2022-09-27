@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Grpc.HealthCheck" Version="2.49.0" />
   </ItemGroup>
 
   <ItemGroup>
